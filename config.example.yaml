@@ -1,0 +1,40 @@
+# Copy this file to `config.yaml` and adjust values for your environment.
+
+# Each frontend defines a listening socket that accepts incoming traffic and
+# routes it to a named backend pool using the specified algorithm.
+frontends:
+  # A TCP frontend for HTTP traffic
+  - name: http
+    listen: "0.0.0.0:8080"
+    protocol: tcp
+    backends: web_pool           # must match a key in backend_pools
+    algorithm: round_robin       # round_robin | least_connections
+
+  # A UDP frontend for DNS traffic
+  - name: dns
+    listen: "0.0.0.0:5353"
+    protocol: udp
+    backends: dns_pool
+    algorithm: least_connections
+
+# Named groups of upstream servers. Each server is specified as "host:port".
+backend_pools:
+  web_pool:
+    backends:
+      - "127.0.0.1:3001"
+      - "127.0.0.1:3002"
+      - "127.0.0.1:3003"
+
+  dns_pool:
+    backends:
+      - "127.0.0.1:5301"
+      - "127.0.0.1:5302"
+
+# Active health checking probes each backend with a TCP connect at the
+# configured interval. Backends are removed from rotation after consecutive
+# failures and restored after consecutive successes.
+health_check:
+  interval_secs: 10              # seconds between probes
+  timeout_secs: 3                # per-probe timeout
+  unhealthy_threshold: 3         # failures before marking unhealthy
+  healthy_threshold: 1           # successes before marking healthy again
