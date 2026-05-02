@@ -11,6 +11,19 @@ keywords = ["load-balancer", "networking", "tcp", "udp", "proxy"]
 categories = ["network-programming", "command-line-utilities"]
 
 [dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+thiserror = "2"
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+dashmap = "6"
+tokio-util = "0.7"
+
+[dev-dependencies]
+serde_yaml = "0.9"
 
 [profile.release]
 lto = true
